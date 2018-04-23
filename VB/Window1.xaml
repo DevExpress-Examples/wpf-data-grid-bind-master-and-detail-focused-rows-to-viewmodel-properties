@@ -1,0 +1,46 @@
+﻿<Window x:Class="MasterDetailInside.Window1" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
+        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+        xmlns:local="clr-namespace:MasterDetailInside" 
+        Title="Window1" Height="500" Width="700">
+    <Window.DataContext>
+        <local:ViewModel/>
+    </Window.DataContext>
+    <Window.Resources>
+        <Style TargetType="dxg:TableView">
+            <Setter Property="ShowGroupPanel" Value="False"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10,0,10,0">
+            <dxe:ComboBoxEdit ItemsSource="{Binding Data}" DisplayMember="Text" Name="comboBoxEdi1" Width="200"/>
+            <dxe:ComboBoxEdit ItemsSource="{Binding EditValue.Data, ElementName=comboBoxEdi1}" DisplayMember="Text" Name="comboBoxEdi2" Width="200"/>
+            <dxe:ComboBoxEdit ItemsSource="{Binding EditValue.Data, ElementName=comboBoxEdi2}" DisplayMember="Text" Name="comboBoxEdi3" Width="200"/>
+        </StackPanel>
+        <dxg:GridControl x:Name="grid" ItemsSource="{Binding Path=Data}" AutoPopulateColumns="True" Margin="0,20,0,0"
+                         local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi1, Path=EditValue, Mode=TwoWay}">
+            <dxg:GridControl.DetailDescriptor>
+                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Data}">
+                    <dxg:GridControl AutoPopulateColumns="True" Name="detail1"
+                                     local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi2, Path=EditValue, Mode=TwoWay}">
+                        <dxg:GridControl.DetailDescriptor>
+                            <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Data}">
+                                <dxg:GridControl AutoPopulateColumns="True"  Name="detail2"
+                                                 local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi3, Path=EditValue, Mode=TwoWay}" />
+                            </dxg:DataControlDetailDescriptor>
+                        </dxg:GridControl.DetailDescriptor>
+                    </dxg:GridControl>
+                </dxg:DataControlDetailDescriptor>
+            </dxg:GridControl.DetailDescriptor>
+            <dxg:GridControl.View>
+                <dxg:TableView>
+                    <dxmvvm:Interaction.Behaviors>
+                        <local:UpdateMasterDetailFocusedRowBehavior/>
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
+            </dxg:GridControl.View>
+        </dxg:GridControl>
+    </Grid>
+</Window>
