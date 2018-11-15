@@ -1,3 +1,11 @@
+<!-- default file list -->
+*Files to look at*:
+
+* [UpdateMasterDetailFocusedRowBehavior.cs](./CS/UpdateMasterDetailFocusedRowBehavior.cs) (VB: [UpdateMasterDetailFocusedRowBehavior.vb](./VB/UpdateMasterDetailFocusedRowBehavior.vb))
+* [ViewModel.cs](./CS/ViewModel.cs) (VB: [ViewModel.vb](./VB/ViewModel.vb))
+* [Window1.xaml](./CS/Window1.xaml) (VB: [Window1.xaml](./VB/Window1.xaml))
+* [Window1.xaml.cs](./CS/Window1.xaml.cs) (VB: [Window1.xaml](./VB/Window1.xaml))
+<!-- default file list end -->
 # Binding Master and Detail focused rows to ViewModel objects
 
 
