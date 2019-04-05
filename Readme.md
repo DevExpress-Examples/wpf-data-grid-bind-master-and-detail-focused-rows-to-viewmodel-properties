@@ -3,7 +3,7 @@
 
 * [DetailFocusedRowBehavior.cs](./CS/WpfApplication21/DetailFocusedRowBehavior.cs) (VB: [DetailFocusedRowBehavior.vb](./VB/WpfApplication21/DetailFocusedRowBehavior.vb))
 * [MainWindow.xaml](./CS/WpfApplication21/MainWindow.xaml) (VB: [MainWindow.xaml](./VB/WpfApplication21/MainWindow.xaml))
-* [MainWindow.xaml.cs](./CS/WpfApplication21/MainWindow.xaml.cs) (VB: [MainWindow.xaml](./VB/WpfApplication21/MainWindow.xaml))
+* [MainWindow.xaml.cs](./CS/WpfApplication21/MainWindow.xaml.cs) (VB: [MainWindow.xaml.vb](./VB/WpfApplication21/MainWindow.xaml.vb))
 * [MasterFocusedRowBehavior.cs](./CS/WpfApplication21/MasterFocusedRowBehavior.cs) (VB: [MasterFocusedRowBehavior.vb](./VB/WpfApplication21/MasterFocusedRowBehavior.vb))
 * [ViewModel.cs](./CS/WpfApplication21/ViewModel.cs) (VB: [ViewModel.vb](./VB/WpfApplication21/ViewModel.vb))
 <!-- default file list end -->
