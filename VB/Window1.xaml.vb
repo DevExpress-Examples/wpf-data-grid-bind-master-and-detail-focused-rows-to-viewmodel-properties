@@ -41,13 +41,13 @@ Imports System.ComponentModel
 Imports DevExpress.Mvvm.UI.Interactivity
 
 Namespace MasterDetailInside
-    Partial Public Class Window1
-        Inherits Window
+	Partial Public Class Window1
+		Inherits Window
 
-        Public Sub New()
-            InitializeComponent()
-        End Sub
-    End Class
+		Public Sub New()
+			InitializeComponent()
+		End Sub
+	End Class
 
 
 End Namespace

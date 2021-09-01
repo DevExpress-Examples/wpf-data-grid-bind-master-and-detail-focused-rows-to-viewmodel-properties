@@ -39,56 +39,69 @@ Imports System.Linq
 Imports System.Text
 
 Namespace MasterDetailInside
-    Public Class ViewModel ' : INotifyPropertyChanged
+	Public Class ViewModel ' : INotifyPropertyChanged
+'INSTANT VB NOTE: The field data was renamed since Visual Basic does not allow fields to have the same name as other class members:
+		Private data_Conflict As List(Of ParentTestData)
+		Public ReadOnly Property Data() As List(Of ParentTestData)
+			Get
+				If data_Conflict Is Nothing Then
+					data_Conflict = New List(Of ParentTestData)()
+					For i As Integer = 0 To 49
+						Dim parentTestData As New ParentTestData() With {
+							.Text = "Master" & i,
+							.Number = i,
+							.Data = New List(Of TestData)()
+						}
+						For j As Integer = 0 To 9
+							Dim testData As New TestData() With {
+								.Text = "Detail" & j & " Master" & i,
+								.Number = j,
+								.Ready = j Mod 2 <> 0,
+								.Data = New List(Of DetailTestData)()
+							}
+							For k As Integer = 0 To 4
+								testData.Data.Add(New DetailTestData() With {
+									.Text = "NestedDetail" & k & " Master" & j,
+									.Number = k,
+									.Ready = j Mod 2 <> 0
+								})
+							Next k
+							parentTestData.Data.Add(testData)
+						Next j
+						data_Conflict.Add(parentTestData)
+					Next i
+				End If
+				Return data_Conflict
+			End Get
+		End Property
 
-        Private data_Renamed As List(Of ParentTestData)
-        Public ReadOnly Property Data() As List(Of ParentTestData)
-            Get
-                If data_Renamed Is Nothing Then
-                    data_Renamed = New List(Of ParentTestData)()
-                    For i As Integer = 0 To 49
-                        Dim parentTestData As New ParentTestData() With {.Text = "Master" & i, .Number = i, .Data = New List(Of TestData)()}
-                        For j As Integer = 0 To 9
-                            Dim testData As New TestData() With {.Text = "Detail" & j & " Master" & i, .Number = j, .Ready = j Mod 2 <> 0, .Data = New List(Of DetailTestData)()}
-                            For k As Integer = 0 To 4
-                                testData.Data.Add(New DetailTestData() With {.Text = "NestedDetail" & k & " Master" & j, .Number = k, .Ready = j Mod 2 <> 0})
-                            Next k
-                            parentTestData.Data.Add(testData)
-                        Next j
-                        data_Renamed.Add(parentTestData)
-                    Next i
-                End If
-                Return data_Renamed
-            End Get
-        End Property
+	End Class
 
-    End Class
+	Public Class DetailTestData
+		Implements IText
 
-    Public Class DetailTestData
-        Implements IText
+		Public Property Ready() As Boolean
+		Public Property Text() As String Implements IText.Text
+		Public Property Number() As Integer
+	End Class
 
-        Public Property Ready() As Boolean
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
-    End Class
+	Public Class TestData
+		Implements IText
 
-    Public Class TestData
-        Implements IText
+		Public Property Ready() As Boolean
+		Public Property Text() As String Implements IText.Text
+		Public Property Number() As Integer
+		Public Property Data() As List(Of DetailTestData)
+	End Class
+	Public Class ParentTestData
+		Implements IText
 
-        Public Property Ready() As Boolean
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
-        Public Property Data() As List(Of DetailTestData)
-    End Class
-    Public Class ParentTestData
-        Implements IText
+		Public Property Text() As String Implements IText.Text
+		Public Property Number() As Integer
+		Public Property Data() As List(Of TestData)
+	End Class
 
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
-        Public Property Data() As List(Of TestData)
-    End Class
-
-    Friend Interface IText
-        Property Text() As String
-    End Interface
+	Friend Interface IText
+		Property Text() As String
+	End Interface
 End Namespace
