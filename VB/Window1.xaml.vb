@@ -38,7 +38,7 @@ Imports DevExpress.Xpf.Grid
 Imports System.Globalization
 Imports System.Windows.Data
 Imports System.ComponentModel
-Imports DevExpress.Xpf.Mvvm.UI.Interactivity
+Imports DevExpress.Mvvm.UI.Interactivity
 
 Namespace MasterDetailInside
     Partial Public Class Window1

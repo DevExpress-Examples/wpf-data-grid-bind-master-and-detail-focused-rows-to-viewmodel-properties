@@ -38,7 +38,7 @@ using DevExpress.Xpf.Grid;
 using System.Globalization;
 using System.Windows.Data;
 using System.ComponentModel;
-using DevExpress.Xpf.Mvvm.UI.Interactivity;
+using DevExpress.Mvvm.UI.Interactivity;
 
 namespace MasterDetailInside
 {

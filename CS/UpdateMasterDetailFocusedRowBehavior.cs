@@ -32,7 +32,7 @@
 // http://www.devexpress.com/example=E4402
 
 using DevExpress.Xpf.Grid;
-using DevExpress.Xpf.Mvvm.UI.Interactivity;
+using DevExpress.Mvvm.UI.Interactivity;
 using System;
 using System.Collections.Generic;
 using System.Linq;

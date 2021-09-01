@@ -32,7 +32,7 @@
 ' http://www.devexpress.com/example=E4402
 
 Imports DevExpress.Xpf.Grid
-Imports DevExpress.Xpf.Mvvm.UI.Interactivity
+Imports DevExpress.Mvvm.UI.Interactivity
 Imports System
 Imports System.Collections.Generic
 Imports System.Linq

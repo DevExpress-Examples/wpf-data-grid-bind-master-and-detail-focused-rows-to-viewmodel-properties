@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterDetailInside", "MasterDetailInside.csproj", "{47F75878-A6A3-41E5-9543-57B684A6EDBF}"
 EndProject
 Global
