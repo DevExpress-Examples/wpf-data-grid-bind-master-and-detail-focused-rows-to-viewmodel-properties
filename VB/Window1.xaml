@@ -1,46 +1,45 @@
-<Window x:Class="MasterDetailInside.Window1" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
-        xmlns:dxe="http://schemas.devexpress.com/winfx/2008/xaml/editors"
-        xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
-        xmlns:local="clr-namespace:MasterDetailInside" 
-        Title="Window1" Height="500" Width="700">
+<Window
+    x:Class="MasterDetailInside.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:local="clr-namespace:MasterDetailInside"
+    Title="Window1"
+    Width="700"
+    Height="500">
+
     <Window.DataContext>
-        <local:ViewModel/>
+        <local:ViewModel />
     </Window.DataContext>
+
     <Window.Resources>
         <Style TargetType="dxg:TableView">
-            <Setter Property="ShowGroupPanel" Value="False"/>
+            <Setter Property="ShowGroupPanel" Value="False" />
         </Style>
     </Window.Resources>
-    <Grid>
-        <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="10,0,10,0">
-            <dxe:ComboBoxEdit ItemsSource="{Binding Data}" DisplayMember="Text" Name="comboBoxEdi1" Width="200"/>
-            <dxe:ComboBoxEdit ItemsSource="{Binding EditValue.Data, ElementName=comboBoxEdi1}" DisplayMember="Text" Name="comboBoxEdi2" Width="200"/>
-            <dxe:ComboBoxEdit ItemsSource="{Binding EditValue.Data, ElementName=comboBoxEdi2}" DisplayMember="Text" Name="comboBoxEdi3" Width="200"/>
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+            <TextBlock Text="{Binding Level1CurrentItem.Name, FallbackValue=NONE}" />
+            <TextBlock Text="{Binding Level2CurrentItem.Name, FallbackValue=NONE}" />
+            <TextBlock Text="{Binding Level3CurrentItem.Name, FallbackValue=NONE}" />
         </StackPanel>
-        <dxg:GridControl x:Name="grid" ItemsSource="{Binding Path=Data}" AutoPopulateColumns="True" Margin="0,20,0,0"
-                         local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi1, Path=EditValue, Mode=TwoWay}">
+        <dxg:GridControl
+            AutoGenerateColumns="AddNew"
+            CurrentItem="{Binding Level1CurrentItem}"
+            ItemsSource="{Binding Data}">
             <dxg:GridControl.DetailDescriptor>
-                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Data}">
-                    <dxg:GridControl AutoPopulateColumns="True" Name="detail1"
-                                     local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi2, Path=EditValue, Mode=TwoWay}">
+                <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Items}">
+                    <dxg:GridControl AutoGenerateColumns="AddNew" CurrentItem="{Binding Level2CurrentItem}">
                         <dxg:GridControl.DetailDescriptor>
-                            <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Data}">
-                                <dxg:GridControl AutoPopulateColumns="True"  Name="detail2"
-                                                 local:UpdateMasterDetailFocusedRowBehavior.CurrentItem="{Binding ElementName=comboBoxEdi3, Path=EditValue, Mode=TwoWay}" />
+                            <dxg:DataControlDetailDescriptor ItemsSourceBinding="{Binding Items}">
+                                <dxg:GridControl AutoGenerateColumns="AddNew" CurrentItem="{Binding Level3CurrentItem}" />
                             </dxg:DataControlDetailDescriptor>
                         </dxg:GridControl.DetailDescriptor>
                     </dxg:GridControl>
                 </dxg:DataControlDetailDescriptor>
             </dxg:GridControl.DetailDescriptor>
-            <dxg:GridControl.View>
-                <dxg:TableView>
-                    <dxmvvm:Interaction.Behaviors>
-                        <local:UpdateMasterDetailFocusedRowBehavior/>
-                    </dxmvvm:Interaction.Behaviors>
-                </dxg:TableView>
-            </dxg:GridControl.View>
         </dxg:GridControl>
-    </Grid>
+    </DockPanel>
+
 </Window>
