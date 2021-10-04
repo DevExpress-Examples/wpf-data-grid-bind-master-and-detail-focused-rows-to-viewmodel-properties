@@ -1,4 +1,4 @@
-﻿' Developer Express Code Central Example:
+' Developer Express Code Central Example:
 ' Binding Master and Detail focused rows to ViewModel objects
 ' 
 ' This example demonstrates how to use ViewModel properties to track and control
@@ -30,175 +30,168 @@
 ' 
 ' You can find sample updates and versions for different programming languages here:
 ' http://www.devexpress.com/example=E4402
-
 Imports DevExpress.Xpf.Grid
 Imports DevExpress.Mvvm.UI.Interactivity
-Imports System
 Imports System.Collections.Generic
 Imports System.Linq
-Imports System.Text
 Imports System.Windows
 
 Namespace MasterDetailInside
-	Public Class UpdateMasterDetailFocusedRowBehavior
-		Inherits Behavior(Of TableView)
 
-		Public Shared ReadOnly CurrentItemProperty As DependencyProperty = DependencyProperty.RegisterAttached("CurrentItem", GetType(Object), GetType(UpdateMasterDetailFocusedRowBehavior), New FrameworkPropertyMetadata(AddressOf CurrentItemPropertyChanged))
-		Public Shared Sub SetCurrentItem(ByVal element As UIElement, ByVal value As Object)
-			element.SetValue(CurrentItemProperty, value)
-		End Sub
-		Public Shared Function GetCurrentItem(ByVal element As UIElement) As Object
-			Return DirectCast(element.GetValue(CurrentItemProperty), Object)
-		End Function
+    Public Class UpdateMasterDetailFocusedRowBehavior
+        Inherits Behavior(Of TableView)
 
+        Public Shared ReadOnly CurrentItemProperty As DependencyProperty = DependencyProperty.RegisterAttached("CurrentItem", GetType(Object), GetType(UpdateMasterDetailFocusedRowBehavior), New FrameworkPropertyMetadata(AddressOf CurrentItemPropertyChanged))
 
-		Public Shared ReadOnly MasterGridBehaviorProperty As DependencyProperty = DependencyProperty.RegisterAttached("MasterGridBehavior", GetType(UpdateMasterDetailFocusedRowBehavior), GetType(UpdateMasterDetailFocusedRowBehavior), Nothing)
-		Public Shared Sub SetMasterGridBehavior(ByVal element As UIElement, ByVal value As UpdateMasterDetailFocusedRowBehavior)
-			element.SetValue(MasterGridBehaviorProperty, value)
-		End Sub
-		Public Shared Function GetMasterGridBehavior(ByVal element As UIElement) As UpdateMasterDetailFocusedRowBehavior
-			Return CType(element.GetValue(MasterGridBehaviorProperty), UpdateMasterDetailFocusedRowBehavior)
-		End Function
+        Public Shared Sub SetCurrentItem(ByVal element As UIElement, ByVal value As Object)
+            element.SetValue(CurrentItemProperty, value)
+        End Sub
 
-		Public Shared ReadOnly GridNestingLevelProperty As DependencyProperty = DependencyProperty.RegisterAttached("GridNestingLevel", GetType(Integer), GetType(UpdateMasterDetailFocusedRowBehavior), Nothing)
-		Public Shared Sub SetGridNestingLevel(ByVal element As UIElement, ByVal value As Integer)
-			element.SetValue(GridNestingLevelProperty, value)
-		End Sub
-		Public Shared Function GetGridNestingLevel(ByVal element As UIElement) As Integer
-			Return CInt(Math.Truncate(element.GetValue(GridNestingLevelProperty)))
-		End Function
+        Public Shared Function GetCurrentItem(ByVal element As UIElement) As Object
+            Return CObj(element.GetValue(CurrentItemProperty))
+        End Function
 
-		Private levelValue As New Dictionary(Of Integer, Object)()
-		Private boundCurrentItemLockCount As Integer = 0
-		Private gridCurrentItemLockCount As Integer = 0
-		Private maxNestingLevel As Integer = 0
-		Protected Overrides Sub OnAttached()
-			maxNestingLevel = GetMaxNestingLevel()
-			InitGridEventsAndProperties(CType(AssociatedObject.DataControl, GridControl), 0)
-			AddHandler AssociatedObject.FocusedViewChanged, AddressOf View_FocusedViewChanged
-		End Sub
-		Private Function GetMaxNestingLevel() As Integer
-			Dim nestingLevel As Integer = 0
-			Dim tempGrid As GridControl = CType(AssociatedObject.DataControl, GridControl)
-			Do
-				Dim detailDescriptor As DataControlDetailDescriptor = TryCast(tempGrid.DetailDescriptor, DataControlDetailDescriptor)
-				If detailDescriptor IsNot Nothing Then
-					tempGrid = CType(detailDescriptor.DataControl, GridControl)
-					nestingLevel += 1
-				Else
-					Exit Do
-				End If
-			Loop
-			Return nestingLevel
-		End Function
-		Private Shared Sub CurrentItemPropertyChanged(ByVal source As DependencyObject, ByVal e As DependencyPropertyChangedEventArgs)
-			Dim grid As GridControl = TryCast(source, GridControl)
-			Dim behavior As UpdateMasterDetailFocusedRowBehavior = UpdateMasterDetailFocusedRowBehavior.GetMasterGridBehavior(grid)
-			If behavior Is Nothing Then
-				Return
-			End If
-			If behavior.boundCurrentItemLockCount = 0 Then
-				behavior.BoundCurrentItemChanged(grid, e.NewValue)
-			End If
-		End Sub
-		Private Sub BoundCurrentItemChanged(ByVal virtualGrid As GridControl, ByVal newCurrentItem As Object)
-			Dim GridNestingLevel As Integer = GetGridNestingLevel(virtualGrid)
+        Public Shared ReadOnly MasterGridBehaviorProperty As DependencyProperty = DependencyProperty.RegisterAttached("MasterGridBehavior", GetType(UpdateMasterDetailFocusedRowBehavior), GetType(UpdateMasterDetailFocusedRowBehavior), Nothing)
 
-			levelValue(GridNestingLevel) = newCurrentItem
-			Dim visualGrid As GridControl = CType(AssociatedObject.DataControl, GridControl)
-			Dim tempGrid As GridControl
+        Public Shared Sub SetMasterGridBehavior(ByVal element As UIElement, ByVal value As UpdateMasterDetailFocusedRowBehavior)
+            element.SetValue(MasterGridBehaviorProperty, value)
+        End Sub
 
-			gridCurrentItemLockCount += 1
-			For i As Integer = 0 To GridNestingLevel - 1
-				Dim rowHandle As Integer = visualGrid.DataController.FindRowByRowValue(levelValue(i))
-				tempGrid = CType(visualGrid.GetDetail(rowHandle), GridControl)
-				If tempGrid Is Nothing Then
-					If newCurrentItem Is Nothing Then
-						Return
-					End If
-					visualGrid.ExpandMasterRow(rowHandle)
-					tempGrid = CType(visualGrid.GetDetail(rowHandle), GridControl)
-					If tempGrid Is Nothing Then
-						Return
-					End If
-				End If
-				visualGrid = tempGrid
-			Next i
-			Dim newFocusedRowHandle As Integer = visualGrid.DataController.FindRowByRowValue(newCurrentItem)
-			visualGrid.View.MoveFocusedRow(newFocusedRowHandle)
-			gridCurrentItemLockCount -= 1
-		End Sub
-		Private Sub InitGridEventsAndProperties(ByVal grid As GridControl, ByVal level As Integer)
-			AddHandler grid.CurrentItemChanged, AddressOf grid_CurrentItemChanged
-			grid.SetValue(UpdateMasterDetailFocusedRowBehavior.MasterGridBehaviorProperty, Me)
-			grid.SetValue(UpdateMasterDetailFocusedRowBehavior.GridNestingLevelProperty, level)
-			Dim detailDescriptor As DataControlDetailDescriptor = TryCast(grid.DetailDescriptor, DataControlDetailDescriptor)
-			If detailDescriptor IsNot Nothing Then
-				InitGridEventsAndProperties(CType(detailDescriptor.DataControl, GridControl), level + 1)
-			End If
+        Public Shared Function GetMasterGridBehavior(ByVal element As UIElement) As UpdateMasterDetailFocusedRowBehavior
+            Return CType(element.GetValue(MasterGridBehaviorProperty), UpdateMasterDetailFocusedRowBehavior)
+        End Function
 
-		End Sub
+        Public Shared ReadOnly GridNestingLevelProperty As DependencyProperty = DependencyProperty.RegisterAttached("GridNestingLevel", GetType(Integer), GetType(UpdateMasterDetailFocusedRowBehavior), Nothing)
 
-		Private Sub View_FocusedViewChanged(ByVal sender As Object, ByVal e As FocusedViewChangedEventArgs)
-			If gridCurrentItemLockCount = 0 Then
-				InvalidateCurrentRow()
-			End If
-		End Sub
+        Public Shared Sub SetGridNestingLevel(ByVal element As UIElement, ByVal value As Integer)
+            element.SetValue(GridNestingLevelProperty, value)
+        End Sub
 
-		Private Sub grid_CurrentItemChanged(ByVal sender As Object, ByVal e As CurrentItemChangedEventArgs)
-			If gridCurrentItemLockCount = 0 Then
-				Dim gridLevel As Integer = GetGridNestingLevel(DirectCast(sender, GridControl))
-				For i As Integer = gridLevel + 1 To maxNestingLevel
-					levelValue(i) = Nothing
-				Next i
-				InvalidateCurrentRow()
-			End If
-		End Sub
+        Public Shared Function GetGridNestingLevel(ByVal element As UIElement) As Integer
+            Return CInt(element.GetValue(GridNestingLevelProperty))
+        End Function
 
-		Private Sub InvalidateCurrentRow()
-			Dim focusedGrid As GridControl = CType(AssociatedObject.FocusedView.DataControl, GridControl)
+        Private levelValue As Dictionary(Of Integer, Object) = New Dictionary(Of Integer, Object)()
 
-			UpdateCurrentItems(focusedGrid, GetVisualGridNestingLevel(focusedGrid, 0), focusedGrid.CurrentItem)
-			UpdateCurrentItemAttachedPropertyValue(CType(AssociatedObject.DataControl, GridControl), 0)
-		End Sub
-		Private Sub UpdateCurrentItems(ByVal grid As GridControl, ByVal level As Integer, ByVal levelCurrentItem As Object)
-			Dim toModify = levelValue.Where(Function(i) i.Key > level).ToList()
-			For Each item As KeyValuePair(Of Integer, Object) In toModify
-				levelValue(item.Key) = Nothing
-			Next item
+        Private boundCurrentItemLockCount As Integer = 0
 
-			UpdateCurrentItem(grid, level, levelCurrentItem)
-		End Sub
-		Private Sub UpdateCurrentItem(ByVal grid As GridControl, ByVal level As Integer, ByVal levelCurrentItem As Object)
-			levelValue(level) = levelCurrentItem
+        Private gridCurrentItemLockCount As Integer = 0
 
-			Dim masterGrid As GridControl = grid.GetMasterGrid()
-			If masterGrid IsNot Nothing Then
-				UpdateCurrentItem(masterGrid, level - 1, masterGrid.GetRow(grid.GetMasterRowHandle()))
-			End If
-		End Sub
-		Private Sub UpdateCurrentItemAttachedPropertyValue(ByVal grid As GridControl, ByVal level As Integer)
-			Dim currentItemValue As Object = Nothing
-			If Not levelValue.TryGetValue(level, currentItemValue) Then
-				Return
-			End If
-			boundCurrentItemLockCount += 1
-			grid.SetCurrentValue(UpdateMasterDetailFocusedRowBehavior.CurrentItemProperty, currentItemValue)
-			boundCurrentItemLockCount -= 1
+        Private maxNestingLevel As Integer = 0
 
-			Dim detailDescriptor As DataControlDetailDescriptor = TryCast(grid.DetailDescriptor, DataControlDetailDescriptor)
-			If detailDescriptor IsNot Nothing Then
-				UpdateCurrentItemAttachedPropertyValue(CType(detailDescriptor.DataControl, GridControl), level + 1)
-			End If
-		End Sub
+        Protected Overrides Sub OnAttached()
+            maxNestingLevel = GetMaxNestingLevel()
+            Me.InitGridEventsAndProperties(CType(AssociatedObject.DataControl, GridControl), 0)
+            AssociatedObject.FocusedViewChanged += AddressOf View_FocusedViewChanged
+        End Sub
 
-		Private Function GetVisualGridNestingLevel(ByVal grid As GridControl, ByVal startLevel As Integer) As Integer
-			Dim masterGrid As GridControl = grid.GetMasterGrid()
-			If masterGrid IsNot Nothing Then
-				Return GetVisualGridNestingLevel(masterGrid, startLevel + 1)
-			End If
-			Return startLevel
-		End Function
+        Private Function GetMaxNestingLevel() As Integer
+            Dim nestingLevel As Integer = 0
+            Dim tempGrid As GridControl = CType(AssociatedObject.DataControl, GridControl)
+            While True
+                Dim detailDescriptor As DataControlDetailDescriptor = TryCast(tempGrid.DetailDescriptor, DataControlDetailDescriptor)
+                If detailDescriptor IsNot Nothing Then
+                    tempGrid = CType(detailDescriptor.DataControl, GridControl)
+                    nestingLevel += 1
+                Else
+                    Exit While
+                End If
+            End While
 
-	End Class
+            Return nestingLevel
+        End Function
+
+        Private Shared Sub CurrentItemPropertyChanged(ByVal source As DependencyObject, ByVal e As DependencyPropertyChangedEventArgs)
+            Dim grid As GridControl = TryCast(source, GridControl)
+            Dim behavior As UpdateMasterDetailFocusedRowBehavior = UpdateMasterDetailFocusedRowBehavior.GetMasterGridBehavior(grid)
+            If behavior Is Nothing Then Return
+            If behavior.boundCurrentItemLockCount = 0 Then
+                behavior.BoundCurrentItemChanged(grid, e.NewValue)
+            End If
+        End Sub
+
+        Private Sub BoundCurrentItemChanged(ByVal virtualGrid As GridControl, ByVal newCurrentItem As Object)
+            Dim GridNestingLevel As Integer = GetGridNestingLevel(virtualGrid)
+            levelValue(GridNestingLevel) = newCurrentItem
+            Dim visualGrid As GridControl = CType(AssociatedObject.DataControl, GridControl)
+            Dim tempGrid As GridControl
+            gridCurrentItemLockCount += 1
+            For i As Integer = 0 To GridNestingLevel - 1
+                Dim rowHandle As Integer = visualGrid.DataController.FindRowByRowValue(levelValue(i))
+                tempGrid = CType(visualGrid.GetDetail(rowHandle), GridControl)
+                If tempGrid Is Nothing Then
+                    If newCurrentItem Is Nothing Then Return
+                    visualGrid.ExpandMasterRow(rowHandle)
+                    tempGrid = CType(visualGrid.GetDetail(rowHandle), GridControl)
+                    If tempGrid Is Nothing Then Return
+                End If
+
+                visualGrid = tempGrid
+            Next
+
+            Dim newFocusedRowHandle As Integer = visualGrid.DataController.FindRowByRowValue(newCurrentItem)
+            visualGrid.View.MoveFocusedRow(newFocusedRowHandle)
+            gridCurrentItemLockCount -= 1
+        End Sub
+
+        Private Sub InitGridEventsAndProperties(ByVal grid As GridControl, ByVal level As Integer)
+            grid.CurrentItemChanged += AddressOf grid_CurrentItemChanged
+            grid.SetValue(MasterGridBehaviorProperty, Me)
+            grid.SetValue(GridNestingLevelProperty, level)
+            Dim detailDescriptor As DataControlDetailDescriptor = TryCast(grid.DetailDescriptor, DataControlDetailDescriptor)
+            If detailDescriptor IsNot Nothing Then Me.InitGridEventsAndProperties(CType(detailDescriptor.DataControl, GridControl), level + 1)
+        End Sub
+
+        Private Sub View_FocusedViewChanged(ByVal sender As Object, ByVal e As FocusedViewChangedEventArgs)
+            If gridCurrentItemLockCount = 0 Then InvalidateCurrentRow()
+        End Sub
+
+        Private Sub grid_CurrentItemChanged(ByVal sender As Object, ByVal e As CurrentItemChangedEventArgs)
+            If gridCurrentItemLockCount = 0 Then
+                Dim gridLevel As Integer = GetGridNestingLevel(CType(sender, GridControl))
+                For i As Integer = gridLevel + 1 To maxNestingLevel
+                    levelValue(i) = Nothing
+                Next
+
+                InvalidateCurrentRow()
+            End If
+        End Sub
+
+        Private Sub InvalidateCurrentRow()
+            Dim focusedGrid As GridControl = CType(AssociatedObject.FocusedView.DataControl, GridControl)
+            UpdateCurrentItems(focusedGrid, Me.GetVisualGridNestingLevel(focusedGrid, 0), focusedGrid.CurrentItem)
+            Me.UpdateCurrentItemAttachedPropertyValue(CType(AssociatedObject.DataControl, GridControl), 0)
+        End Sub
+
+        Private Sub UpdateCurrentItems(ByVal grid As GridControl, ByVal level As Integer, ByVal levelCurrentItem As Object)
+            Dim toModify = levelValue.Where(Function(i) i.Key > level).ToList()
+            For Each item As KeyValuePair(Of Integer, Object) In toModify
+                levelValue(item.Key) = Nothing
+            Next
+
+            Me.UpdateCurrentItem(grid, level, levelCurrentItem)
+        End Sub
+
+        Private Sub UpdateCurrentItem(ByVal grid As GridControl, ByVal level As Integer, ByVal levelCurrentItem As Object)
+            levelValue(level) = levelCurrentItem
+            Dim masterGrid As GridControl = grid.GetMasterGrid()
+            If masterGrid IsNot Nothing Then UpdateCurrentItem(masterGrid, level - 1, masterGrid.GetRow(grid.GetMasterRowHandle()))
+        End Sub
+
+        Private Sub UpdateCurrentItemAttachedPropertyValue(ByVal grid As GridControl, ByVal level As Integer)
+            Dim currentItemValue As Object
+            If Not levelValue.TryGetValue(level, currentItemValue) Then Return
+            boundCurrentItemLockCount += 1
+            grid.SetCurrentValue(CurrentItemProperty, currentItemValue)
+            boundCurrentItemLockCount -= 1
+            Dim detailDescriptor As DataControlDetailDescriptor = TryCast(grid.DetailDescriptor, DataControlDetailDescriptor)
+            If detailDescriptor IsNot Nothing Then Me.UpdateCurrentItemAttachedPropertyValue(CType(detailDescriptor.DataControl, GridControl), level + 1)
+        End Sub
+
+        Private Function GetVisualGridNestingLevel(ByVal grid As GridControl, ByVal startLevel As Integer) As Integer
+            Dim masterGrid As GridControl = grid.GetMasterGrid()
+            If masterGrid IsNot Nothing Then Return Me.GetVisualGridNestingLevel(masterGrid, startLevel + 1)
+            Return startLevel
+        End Function
+    End Class
 End Namespace
