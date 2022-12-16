@@ -1,9 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
     <TargetFramework>net6.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <AssemblyName>MasterDetailInside</AssemblyName>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
@@ -16,18 +18,16 @@
     <UseWPF>true</UseWPF>
     <Platforms>x86;AnyCPU</Platforms>
     <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
-    <DefaultItemExcludes>obj*/**</DefaultItemExcludes>
-    <OptionExplicit>On</OptionExplicit>
-    <OptionCompare>Binary</OptionCompare>
-    <OptionStrict>Off</OptionStrict>
-    <OptionInfer>On</OptionInfer>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <RemoveIntegerChecks>true</RemoveIntegerChecks>
+    <EnableDefaultApplicationDefinition>false</EnableDefaultApplicationDefinition>
   </PropertyGroup>
   <ItemGroup>
-    <AppDesigner Include="My Project\" />
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="DevExpress.Data" Version="22.2.*-*" />
