@@ -1,4 +1,4 @@
-﻿' Developer Express Code Central Example:
+' Developer Express Code Central Example:
 ' Binding Master and Detail focused rows to ViewModel objects
 ' 
 ' This example demonstrates how to use ViewModel properties to track and control
@@ -30,65 +30,74 @@
 ' 
 ' You can find sample updates and versions for different programming languages here:
 ' http://www.devexpress.com/example=E4402
-
-
-Imports System
 Imports System.Collections.Generic
 Imports System.ComponentModel
-Imports System.Linq
-Imports System.Text
 
 Namespace MasterDetailInside
+
     Public Class ViewModel ' : INotifyPropertyChanged
 
-        Private data_Renamed As List(Of ParentTestData)
-        Public ReadOnly Property Data() As List(Of ParentTestData)
+        Private dataField As List(Of ParentTestData)
+
+        Public ReadOnly Property Data As List(Of ParentTestData)
             Get
-                If data_Renamed Is Nothing Then
-                    data_Renamed = New List(Of ParentTestData)()
-                    For i As Integer = 0 To 49
-                        Dim parentTestData As New ParentTestData() With {.Text = "Master" & i, .Number = i, .Data = New List(Of TestData)()}
-                        For j As Integer = 0 To 9
-                            Dim testData As New TestData() With {.Text = "Detail" & j & " Master" & i, .Number = j, .Ready = j Mod 2 <> 0, .Data = New List(Of DetailTestData)()}
-                            For k As Integer = 0 To 4
+                If dataField Is Nothing Then
+                    dataField = New List(Of ParentTestData)()
+                    For i As Integer = 0 To 50 - 1
+                        Dim parentTestData As ParentTestData = New ParentTestData() With {.Text = "Master" & i, .Number = i, .Data = New List(Of TestData)()}
+                        For j As Integer = 0 To 10 - 1
+                            Dim testData As TestData = New TestData() With {.Text = "Detail" & j & " Master" & i, .Number = j, .Ready = j Mod 2 <> 0, .Data = New List(Of DetailTestData)()}
+                            For k As Integer = 0 To 5 - 1
                                 testData.Data.Add(New DetailTestData() With {.Text = "NestedDetail" & k & " Master" & j, .Number = k, .Ready = j Mod 2 <> 0})
-                            Next k
+                            Next
+
                             parentTestData.Data.Add(testData)
-                        Next j
-                        data_Renamed.Add(parentTestData)
-                    Next i
+                        Next
+
+                        dataField.Add(parentTestData)
+                    Next
                 End If
-                Return data_Renamed
+
+                Return dataField
             End Get
         End Property
-
     End Class
 
     Public Class DetailTestData
         Implements IText
 
-        Public Property Ready() As Boolean
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
+        Public Property Ready As Boolean
+
+        Public Property Text As String Implements IText.Text
+
+        Public Property Number As Integer
     End Class
 
     Public Class TestData
         Implements IText
 
-        Public Property Ready() As Boolean
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
-        Public Property Data() As List(Of DetailTestData)
+        Public Property Ready As Boolean
+
+        Public Property Text As String Implements IText.Text
+
+        Public Property Number As Integer
+
+        Public Property Data As List(Of DetailTestData)
     End Class
+
     Public Class ParentTestData
         Implements IText
 
-        Public Property Text() As String Implements IText.Text
-        Public Property Number() As Integer
-        Public Property Data() As List(Of TestData)
+        Public Property Text As String Implements IText.Text
+
+        Public Property Number As Integer
+
+        Public Property Data As List(Of TestData)
     End Class
 
     Friend Interface IText
-        Property Text() As String
+
+        Property Text As String
+
     End Interface
 End Namespace

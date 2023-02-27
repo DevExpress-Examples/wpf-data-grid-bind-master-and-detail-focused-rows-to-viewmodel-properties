@@ -1,4 +1,4 @@
-﻿' Developer Express Code Central Example:
+' Developer Express Code Central Example:
 ' Binding Master and Detail focused rows to ViewModel objects
 ' 
 ' This example demonstrates how to use ViewModel properties to track and control
@@ -30,15 +30,14 @@
 ' 
 ' You can find sample updates and versions for different programming languages here:
 ' http://www.devexpress.com/example=E4402
-
-
 Imports System.Windows
 
 Namespace MasterDetailInside
+
     ''' <summary>
     ''' Interaction logic for App.xaml
     ''' </summary>
-    Partial Public Class App
+    Public Partial Class App
         Inherits Application
 
     End Class
