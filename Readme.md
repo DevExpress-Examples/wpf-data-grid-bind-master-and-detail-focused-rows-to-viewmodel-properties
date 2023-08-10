@@ -30,3 +30,4 @@ You can bind [CurrentItem](https://docs.devexpress.com/WPF/DevExpress.Xpf.Grid.D
 * [WPF Data Grid - Display Detail Content in Tabs](https://github.com/DevExpress-Examples/wpf-data-grid-display-detail-content-in-tabs)
 * [WPF Data Grid - Expand and Collapse Master Rows](https://github.com/DevExpress-Examples/wpf-data-grid-expand-and-collapse-master-rows)
 * [WPF Data Grid - Display Different Details Based on Data in the Master Row](https://github.com/DevExpress-Examples/wpf-data-grid-display-different-details-based-on-master-row-data)
+* [WPF Data Grid - Use the ParentPath Property to Define the Selected Detail Row in the View Model](https://github.com/DevExpress-Examples/how-to-use-the-parentpath-property-to-enable-the-binding-from-the-viewmodel-to-grid-t291661)
