@@ -33,7 +33,7 @@ You can bind [CurrentItem](https://docs.devexpress.com/WPF/DevExpress.Xpf.Grid.D
 * [WPF Data Grid - Display Different Details Based on Data in the Master Row](https://github.com/DevExpress-Examples/wpf-data-grid-display-different-details-based-on-master-row-data)
 * [WPF Data Grid - Use the ParentPath Property to Define the Selected Detail Row in the View Model](https://github.com/DevExpress-Examples/how-to-use-the-parentpath-property-to-enable-the-binding-from-the-viewmodel-to-grid-t291661)
 <!-- feedback -->
-## Does this example address your development requirements/objectives?
+## Does This Example Address Your Development Requirements/Objectives?
 
 [<img src="https://www.devexpress.com/support/examples/i/yes-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=wpf-data-grid-bind-master-and-detail-focused-rows-to-viewmodel-properties&~~~was_helpful=yes) [<img src="https://www.devexpress.com/support/examples/i/no-button.svg"/>](https://www.devexpress.com/support/examples/survey.xml?utm_source=github&utm_campaign=wpf-data-grid-bind-master-and-detail-focused-rows-to-viewmodel-properties&~~~was_helpful=no)
 
